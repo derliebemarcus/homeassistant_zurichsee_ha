@@ -4,8 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.6] - 2026-06-24
 
+### Added
+
+- No new features.
+
+### Changed
+
+- Updated repository, badge, documentation, issue-tracker, and installation links after the repository rename.
+
 ### Fixed
-- Updated repository, documentation, issue-tracker, badge, and installation links after the repository rename.
+
+- Corrected outdated references to the former repository name.
 
 ## [0.1.5] - 2026-06-24
 
