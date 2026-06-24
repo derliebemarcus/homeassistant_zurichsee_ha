@@ -1,0 +1,27 @@
+name: Actionlint Diagnostic PR
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Run actionlint without failing
+        uses: devops-actions/actionlint@v0.1.11
+        with:
+          fail-on-errors: "false"
+
+      - name: Upload actionlint findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: actionlint-findings-pr
+          path: actionlint-errors.json
+          if-no-files-found: error
