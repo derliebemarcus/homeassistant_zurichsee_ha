@@ -18,7 +18,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: publish-release-${{ github.ref_name }}
+  group: publish-release-${{ github.ref_name }}-${{ github.sha }}
   cancel-in-progress: false
 
 jobs:
