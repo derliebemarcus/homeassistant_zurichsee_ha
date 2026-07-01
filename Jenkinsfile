@@ -24,8 +24,19 @@ ciHomeAssistantIntegration(
         PATH: '/opt/python/shims:/opt/python/bin:/usr/local/bin:/usr/bin:/bin',
     ],
     runtime: [
-        mode: 'host',
+        mode: 'container',
+        image: 'registry.home.siczb.de/siczb/python-ci:latest',
+        engine: 'podman',
+        shell: '/bin/bash',
+        pullPolicy: 'never',
+        keepId: true,
     ],
+    workspaceNormalizationCommand: '''
+        set +e
+        [ -e "$WORKSPACE" ] || exit 0
+        sudo chown -R "$(id -u):$(id -g)" "$WORKSPACE" || true
+        sudo chmod -R u+rwX "$WORKSPACE" || true
+    ''',
     prepareCommand: 'chmod 700 tools/jenkins_prepare.sh && tools/jenkins_prepare.sh',
     commands: [
         pytest: 'chmod 700 tools/jenkins_python_tasks.sh && tools/jenkins_python_tasks.sh pytest',
@@ -36,6 +47,7 @@ ciHomeAssistantIntegration(
         pipAudit: 'chmod 700 tools/jenkins_python_tasks.sh && tools/jenkins_python_tasks.sh pip-audit',
         mutation: 'chmod 700 tools/jenkins_python_tasks.sh && tools/jenkins_python_tasks.sh mutation',
         dependencyConsistency: 'chmod 700 tools/jenkins_python_tasks.sh && tools/jenkins_python_tasks.sh dependency-consistency',
+        codeql: 'chmod 700 tools/jenkins_codeql.sh && tools/jenkins_codeql.sh',
     ],
     mutation: [
         artifacts: 'reports/mutation/**,mutants/.mutmut-cache/**,.mutmut-cache',
