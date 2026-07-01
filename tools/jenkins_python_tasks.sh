@@ -46,10 +46,19 @@ case "$task" in
         ;;
     pip-audit)
         mkdir -p "$report_root/pip-audit"
-        "$python" tools/run_pip_audit.py \
-            --requirement requirements.txt \
-            --format json \
+        audit_args=(
+            --requirement requirements.txt
+            --format json
             --output "$report_root/pip-audit/pip-audit-report.json"
+        )
+        while IFS= read -r advisory || [[ -n "$advisory" ]]; do
+            advisory="${advisory%%#*}"
+            advisory="${advisory#"${advisory%%[![:space:]]*}"}"
+            advisory="${advisory%"${advisory##*[![:space:]]}"}"
+            [[ -z "$advisory" ]] && continue
+            audit_args+=(--ignore-vuln "$advisory")
+        done < tools/pip-audit-ignore.txt
+        "$python" -m pip_audit "${audit_args[@]}"
         ;;
     mutation)
         mkdir -p "$report_root/mutation"
